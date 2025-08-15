@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request)
+    use ApiResponseTrait;
+    public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -22,10 +25,13 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth')->plainTextToken;
 
-        return response()->json(['user' => $user, 'token' => $token]);
+        return $this->successResponse([
+            'user'  => $user,
+            'token' => $token
+        ], 'User registered successfully');
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -37,17 +43,21 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth')->plainTextToken;
 
-        return response()->json(['user' => $user, 'token' => $token]);
+        return $this->successResponse([
+            'user'  => $user,
+            'token' => $token
+        ], 'Login successful');
     }
 
-    public function me(Request $request)
+    public function me(Request $request): JsonResponse
     {
-        return $request->user();
+        return $this->successResponse($request->user(), 'User profile');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()?->delete();
-        return response()->json(['message' => 'Logged out']);
+
+        return $this->successResponse(null, 'Logout successful');
     }
 }
