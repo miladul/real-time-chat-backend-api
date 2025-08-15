@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static where(string $string, mixed $id)
+ * @method static create(array $array)
+ */
 class Message extends Model
 {
     protected $fillable = ['sender_id','receiver_id','body','read_at'];

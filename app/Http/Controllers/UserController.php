@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // List all users except me, plus unread counts
-    public function index(Request $request)
+    use ApiResponseTrait;
+    public function index(Request $request): JsonResponse
     {
         $me = $request->user()->id;
 
@@ -21,7 +23,7 @@ class UserController extends Controller
             ->orderBy('name')
             ->get();
 
-        return $users;
+        return $this->successResponse($users, 'Users list');
     }
 }
 

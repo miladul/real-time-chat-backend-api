@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Events\UserTyping;
 use App\Models\Message;
 use App\Models\User;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class ChatController extends Controller
 {
-    // fetch conversation with a user
-    public function conversation(User $user, Request $request)
+    use ApiResponseTrait;
+    public function conversation(User $user, Request $request): JsonResponse
     {
         $me = $request->user()->id;
 
@@ -32,11 +34,11 @@ class ChatController extends Controller
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
-        return $messages;
+        return $this->successResponse($messages, 'Conversation');
     }
 
     // send message
-    public function send(Request $request)
+    public function send(Request $request): JsonResponse
     {
         $data = $request->validate([
             'receiver_id' => ['required', Rule::exists('users','id')->withoutTrashed()],
@@ -56,7 +58,15 @@ class ChatController extends Controller
         // Fire Pusher event
         broadcast(new MessageSent($message))->toOthers();
 
-        return response()->json($message, 201);
+        return $this->successResponse($message, 'Message sent');
+    }
+
+    public function typing(Request $request): JsonResponse
+    {
+
+        broadcast(new UserTyping(auth()->id(), $request->receiver_id));
+
+        return $this->successResponse(['ok' => true], 'Typing indicator');
     }
 }
 
