@@ -28,7 +28,7 @@ class AuthController extends Controller
         return $this->successResponse([
             'user'  => $user,
             'token' => $token
-        ], 'User registered successfully');
+        ], 'User registered successfully', 201);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -46,7 +46,7 @@ class AuthController extends Controller
         return $this->successResponse([
             'user'  => $user,
             'token' => $token
-        ], 'Login successful');
+        ], 'Login successful', 200);
     }
 
     public function me(Request $request): JsonResponse
