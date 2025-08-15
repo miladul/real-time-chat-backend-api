@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
 use App\Events\UserTyping;
+use App\Http\Requests\SendRequest;
+use App\Http\Requests\TypingRequest;
 use App\Models\Message;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -38,12 +40,9 @@ class ChatController extends Controller
     }
 
     // send message
-    public function send(Request $request): JsonResponse
+    public function send(SendRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'receiver_id' => ['required', Rule::exists('users','id')->withoutTrashed()],
-            'body'        => ['required','string','max:5000'],
-        ]);
+        $data = $request->validated();
 
         if ((int)$data['receiver_id'] === (int)$request->user()->id) {
             return response()->json(['message'=>'Cannot message yourself'], 422);
@@ -61,10 +60,9 @@ class ChatController extends Controller
         return $this->successResponse($message, 'Message sent');
     }
 
-    public function typing(Request $request): JsonResponse
+    public function typing(TypingRequest $request): JsonResponse
     {
-
-        broadcast(new UserTyping(auth()->id(), $request->receiver_id));
+        broadcast(new UserTyping(auth()->id(), $request->input('receiver_id')));
 
         return $this->successResponse(['ok' => true], 'Typing indicator');
     }
