@@ -1,61 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Real-Time Chat Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time chat application built with **Laravel API** (backend) and **Vue 3 + Vite** (frontend), powered by **Pusher** for instant messaging.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ⚡ Features
+- Real-time private messaging between users
+- Laravel API for authentication & chat handling
+- Vue 3 frontend with Vite
+- Pusher for real-time broadcasting
+- Queue system for async message processing
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📌 Requirements
+- PHP >= 8.2
+- Composer
+- MySQL
+- Node.js >= 16
+- Pusher account
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🚀 Backend Setup (Laravel API)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clone the repository
+```bash
+git clone https://github.com/miladul/real-time-chat-backend-api.git
+cd real-time-chat-backend-api
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Install dependencies
+```bash
+composer install
+```
 
-## Laravel Sponsors
+### 3. Generate application key
+```bash
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 4. Create `.env` file
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+### 5. Update `.env` configuration
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_db_name
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+QUEUE_CONNECTION=database
+BROADCAST_DRIVER=pusher
 
-## Contributing
+PUSHER_APP_ID=app_id
+PUSHER_APP_KEY=app_key
+PUSHER_APP_SECRET=app_secret
+PUSHER_APP_CLUSTER=app_cluster
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+FRONTEND_URL=your_front_end_url
+```
 
-## Code of Conduct
+### 6. Run migrations
+```bash
+php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 7. Start the server
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+### 8. Start the queue worker
+```bash
+php artisan queue:work
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📡 API Endpoints
 
-## License
+### Public Endpoints
+| Method | Endpoint       | Description              |
+|--------|---------------|--------------------------|
+| POST   | `/register`   | Register a new user      |
+| POST   | `/login`      | Login and get a token    |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Protected Endpoints (Require `auth:sanctum`)
+| Method | Endpoint                  | Description                    |
+|--------|---------------------------|--------------------------------|
+| POST   | `/logout`                 | Logout the authenticated user |
+| GET    | `/me`                     | Get authenticated user info   |
+| GET    | `/users`                  | Get list of all users         |
+| GET    | `/messages/{user}`        | Get chat history with a user  |
+| POST   | `/messages`               | Send a new message            |
+| POST   | `/typing`                 | Send typing indicator         |
+
+---
+
+---
+
+## 💻 Frontend Setup (Vue 3 + Vite)
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/miladul/real-time-chat-frontend.git
+cd real-time-chat-frontend
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Create `.env` file
+```bash
+touch .env
+```
+Add the following content:
+```env
+VITE_PUSHER_APP_KEY=app_key
+VITE_PUSHER_APP_CLUSTER=app_cluster
+VITE_BACKEND_BASE_URL=laravel_backend_url
+
+e.g: 
+VITE_BACKEND_BASE_URL=http://localhost:8000
+
+```
+
+### 4. Start the development server
+```bash
+npm run dev
+```
+
+---
+**Developed by [Miladul Islam](https://github.com/miladul)**
