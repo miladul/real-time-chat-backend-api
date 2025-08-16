@@ -35,17 +35,12 @@ cd real-time-chat-backend-api
 composer install
 ```
 
-### 3. Generate application key
-```bash
-php artisan key:generate
-```
-
-### 4. Create `.env` file
+### 3. Create `.env` file
 ```bash
 cp .env.example .env
 ```
 
-### 5. Update `.env` configuration
+### 4. Update `.env` configuration
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -63,6 +58,11 @@ PUSHER_APP_SECRET=app_secret
 PUSHER_APP_CLUSTER=app_cluster
 
 FRONTEND_URL=your_front_end_url
+```
+
+### 5. Generate application key
+```bash
+php artisan key:generate
 ```
 
 ### 6. Run migrations
