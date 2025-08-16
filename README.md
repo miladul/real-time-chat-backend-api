@@ -80,8 +80,12 @@ php artisan serve
 php artisan queue:work
 ```
 
-## 📡 API Endpoints
+### 9. Feature tests by running
+```bash
+php artisan test --filter=ChatSystemTest
 
+````
+## 📡 API Endpoints
 ### Public Endpoints
 | Method | Endpoint       | Description              |
 |--------|---------------|--------------------------|
